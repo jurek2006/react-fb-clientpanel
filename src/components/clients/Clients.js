@@ -13,7 +13,7 @@ export class Clients extends Component {
                 balance: "30"
             },
             {
-                id: "4353364",
+                id: "431245",
                 firstName: "Onufry",
                 lastName: "Zagłoba",
                 email: "onufry@skrz.pl",
@@ -44,7 +44,7 @@ export class Clients extends Component {
                         </thead>
                         <tbody>
                             {clients.map(client => (
-                                <tr key="client.id">
+                                <tr key={client.id}>
                                     <td>
                                         {client.firstName} {client.lastName}
                                     </td>
@@ -57,7 +57,7 @@ export class Clients extends Component {
                                             to={`/clients/${client.id}`}
                                             className="btn btn-secondary"
                                         >
-                                            <i class="fas fa-arrow-circle-right" />{" "}
+                                            <i className="fas fa-arrow-circle-right" />{" "}
                                             Details
                                         </Link>
                                     </td>
