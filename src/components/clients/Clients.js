@@ -52,7 +52,7 @@ export class Clients extends Component {
                                     </td>
                                     <td>
                                         <Link
-                                            to={`/clients/${client.id}`}
+                                            to={`/client/${client.id}`}
                                             className="btn btn-secondary"
                                         >
                                             <i className="fas fa-arrow-circle-right" />{" "}
