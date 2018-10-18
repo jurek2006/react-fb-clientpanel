@@ -8,8 +8,106 @@ import Spinner from "../layout/Spinner";
 import classnames from "classnames";
 
 export class ClientDetails extends Component {
+    state = {
+        showBalanceUpdate: false,
+        balanceUpdateAmount: "",
+        error: {}
+    };
+
+    onChange = (validation, e) => {
+        //
+        this.setState({ [e.target.name]: e.target.value });
+
+        const { isValid, validationErrMessage } = validation;
+
+        if (isValid) {
+            this.setState({
+                error: {
+                    [e.target.name]: isValid(e.target.value)
+                        ? null
+                        : validationErrMessage
+                }
+            });
+        }
+    };
+
+    balanceSubmit = e => {
+        e.preventDefault();
+        const { client, firestore } = this.props;
+        const { balanceUpdateAmount } = this.state;
+
+        const clientUpdate = { balance: parseFloat(balanceUpdateAmount) };
+
+        // Update in firestore
+        firestore.update(
+            { collection: "clients", doc: client.id },
+            clientUpdate
+        );
+
+        this.setState({ showBalanceUpdate: false });
+    };
+
+    // Delete Client
+    onDeleteClick = () => {
+        const { client, firestore, history } = this.props;
+
+        firestore
+            .delete({ collection: "clients", doc: client.id })
+            .then(history.push("/"));
+    };
+
     render() {
         const { client } = this.props;
+        const { showBalanceUpdate, balanceUpdateAmount, error } = this.state;
+
+        let balanceForm = "";
+        // If balance form should display
+        if (showBalanceUpdate) {
+            balanceForm = (
+                <form onSubmit={this.balanceSubmit}>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            className={classnames("form-control border", {
+                                "border-danger": error.balanceUpdateAmount
+                            })}
+                            name="balanceUpdateAmount"
+                            placeholder="Add New Balance"
+                            value={balanceUpdateAmount}
+                            onChange={this.onChange.bind(this, {
+                                isValid: fieldValue =>
+                                    fieldValue.trim().length > 0 &&
+                                    !isNaN(fieldValue),
+                                validationErrMessage: "Value is not a number"
+                            })}
+                        />
+
+                        <div className="input-group-append">
+                            <input
+                                type="submit"
+                                value="Update"
+                                className="btn btn-outline-darl"
+                                disabled={error.balanceUpdateAmount}
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title={
+                                    error.balanceUpdateAmount
+                                        ? error.balanceUpdateAmount
+                                        : "Update balance"
+                                }
+                            />
+                        </div>
+                    </div>
+                    {error.balanceUpdateAmount && (
+                        <div className="text-danger">
+                            {error.balanceUpdateAmount}
+                        </div>
+                    )}
+                </form>
+            );
+        } else {
+            balanceForm = null;
+        }
         if (client) {
             return (
                 <React.Fragment>
@@ -28,7 +126,10 @@ export class ClientDetails extends Component {
                                 >
                                     Edit
                                 </Link>
-                                <button className="btn btn-danger">
+                                <button
+                                    onClick={this.onDeleteClick}
+                                    className="btn btn-danger"
+                                >
                                     Delete
                                 </button>
                             </div>
@@ -67,8 +168,28 @@ export class ClientDetails extends Component {
                                             {parseFloat(client.balance).toFixed(
                                                 2
                                             )}
-                                        </span>
+                                        </span>{" "}
+                                        <small>
+                                            <a
+                                                href="#!"
+                                                onClick={() =>
+                                                    this.setState({
+                                                        showBalanceUpdate: !this
+                                                            .state
+                                                            .showBalanceUpdate,
+                                                        balanceUpdateAmount:
+                                                            client.balance,
+                                                        error: {
+                                                            balanceUpdateAmount: false
+                                                        }
+                                                    })
+                                                }
+                                            >
+                                                <i className="fas fa-pencil-alt" />
+                                            </a>
+                                        </small>
                                     </h3>
+                                    {balanceForm}
                                 </div>
                             </div>
                             <hr />
