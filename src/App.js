@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import AppNavbar from "./components/layout/AppNavbar";
 import Dashboard from "./components/layout/Dashboard";
+import EditClient from "./components/clients/EditClient";
 import AddClient from "./components/clients/AddClient";
 import ClientDetails from "./components/clients/ClientDetails";
 
@@ -28,6 +29,11 @@ class App extends Component {
                                     exact
                                     path="/client/:id"
                                     component={ClientDetails}
+                                />
+                                <Route
+                                    exact
+                                    path="/client/edit/:id"
+                                    component={EditClient}
                                 />
                             </Switch>
                         </div>
