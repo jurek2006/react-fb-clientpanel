@@ -15,11 +15,14 @@ export class ClientDetails extends Component {
     };
 
     onChange = (validation, e) => {
-        //
+        //onChange handler with possible validation
         this.setState({ [e.target.name]: e.target.value });
 
+        // it gets validation function and error message in validation object
         const { isValid, validationErrMessage } = validation;
 
+        // if there is validation function given checks value and sets
+        // error[fieldName] to errorMessage or to null
         if (isValid) {
             this.setState({
                 error: {
@@ -67,7 +70,7 @@ export class ClientDetails extends Component {
                 <form onSubmit={this.balanceSubmit}>
                     <div className="input-group">
                         <input
-                            type="text"
+                            type="number"
                             className={classnames("form-control border", {
                                 "border-danger": error.balanceUpdateAmount
                             })}
