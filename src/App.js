@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { UserIsAuthenticated, UserIsNotAuthenticated } from "./helpers/auth";
 import "./App.css";
 import AppNavbar from "./components/layout/AppNavbar";
 import Dashboard from "./components/layout/Dashboard";
@@ -20,23 +21,33 @@ class App extends Component {
                         <AppNavbar />
                         <div className="container">
                             <Switch>
-                                <Route exact path="/" component={Dashboard} />
+                                <Route
+                                    exact
+                                    path="/"
+                                    component={UserIsAuthenticated(Dashboard)}
+                                />
                                 <Route
                                     exact
                                     path="/client/add"
-                                    component={AddClient}
+                                    component={UserIsAuthenticated(AddClient)}
                                 />
                                 <Route
                                     exact
                                     path="/client/:id"
-                                    component={ClientDetails}
+                                    component={UserIsAuthenticated(
+                                        ClientDetails
+                                    )}
                                 />
                                 <Route
                                     exact
                                     path="/client/edit/:id"
-                                    component={EditClient}
+                                    component={UserIsAuthenticated(EditClient)}
                                 />
-                                <Route exact path="/login" component={Login} />
+                                <Route
+                                    exact
+                                    path="/login"
+                                    component={UserIsNotAuthenticated(Login)}
+                                />
                             </Switch>
                         </div>
                     </div>
