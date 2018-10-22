@@ -120,7 +120,7 @@ export class AddClient extends Component {
     }
 }
 
-AddClient.propType = {
+AddClient.propTypes = {
     firestore: PropTypes.object.isRequired
 };
 
