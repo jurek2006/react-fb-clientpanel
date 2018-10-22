@@ -19,7 +19,6 @@ export class Login extends Component {
             .auth()
             .signInWithEmailAndPassword(email, password)
             .then(user => {
-                console.log(user);
                 this.props.history.push("/");
             })
             .catch(error => alert("Invalid login credentials"));
