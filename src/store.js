@@ -7,7 +7,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import firebaseConfig from "./config/private/firebaseConfig";
 
 // Reducers
-// @todo
+import notifyReducer from "./reducers/notifyReducer";
 
 // react-redux-firebase config
 const rrfConfig = {
@@ -30,7 +30,8 @@ const createStoreWithFirebase = compose(
 // Add firebase to reducers
 const rootReducer = combineReducers({
     firebase: firebaseReducer,
-    firestore: firestoreReducer // <- needed if using firestore
+    firestore: firestoreReducer, // <- needed if using firestore
+    notify: notifyReducer
 });
 
 // Create initial state

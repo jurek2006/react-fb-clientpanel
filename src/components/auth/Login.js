@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-// import { compose } from "redux";
-// import { connect } from "react-redux";
+import { compose } from "redux";
+import { connect } from "react-redux";
 import { firebaseConnect } from "react-redux-firebase";
+import { notifyUser } from "../../actions/notifyActions";
+import Alert from "../layout/Alert";
 
 export class Login extends Component {
     state = {
@@ -10,9 +12,17 @@ export class Login extends Component {
         password: ""
     };
 
+    componentWillUnmount() {
+        // message or message type is not null, reset notification
+        const { message, messageType } = this.props.notify;
+        if (message || messageType) {
+            this.props.notifyUser(null, null);
+        }
+    }
+
     onSubmit = e => {
         e.preventDefault();
-        const { firebase } = this.props;
+        const { firebase, notifyUser } = this.props;
         const { email, password } = this.state;
 
         firebase
@@ -21,7 +31,7 @@ export class Login extends Component {
             .then(user => {
                 this.props.history.push("/");
             })
-            .catch(error => alert("Invalid login credentials"));
+            .catch(error => notifyUser("Invalid login credentials", "error"));
     };
 
     onChange = e => {
@@ -29,12 +39,19 @@ export class Login extends Component {
     };
 
     render() {
+        const { message, messageType } = this.props.notify;
         return (
             <div>
                 <div className="row">
                     <div className="col-md-6 mx-auto">
                         <div className="card">
                             <div className="card-body">
+                                {message && (
+                                    <Alert
+                                        message={message}
+                                        messageType={messageType}
+                                    />
+                                )}
                                 <h1 className="text-center pb-4 pt-3">
                                     <span className="text-primary">
                                         <i className="fas fa-lock" /> Login
@@ -84,4 +101,12 @@ Login.propTypes = {
     firebase: PropTypes.object.isRequired
 };
 
-export default firebaseConnect()(Login);
+export default compose(
+    firebaseConnect(),
+    connect(
+        (state, props) => ({
+            notify: state.notify
+        }),
+        { notifyUser }
+    )
+)(Login);
