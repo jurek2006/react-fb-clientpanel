@@ -3,7 +3,6 @@ import {
     DISABLE_BALANCE_ON_EDIT,
     ALLOW_REGISTRATION
 } from "../actions/types";
-import { actionTypes } from "redux-firestore";
 
 const initialState = {
     disableBalanceOnAdd: true,
@@ -11,8 +10,8 @@ const initialState = {
     allowRegistration: false
 };
 
-export default function(state = initialState) {
-    switch (actionTypes.type) {
+export default function(state = initialState, action) {
+    switch (action.type) {
         case DISABLE_BALANCE_ON_ADD:
             return {
                 ...state,
